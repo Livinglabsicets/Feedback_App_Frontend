@@ -1,0 +1,41 @@
+/* AddVisit.css */
+
+form {
+    display: flex;
+    flex-direction: column;
+    max-width: 400px;
+    margin: auto;
+  }
+  
+  label {
+    margin-bottom: 8px;
+  }
+  
+  input {
+    margin-bottom: 16px;
+    padding: 8px;
+    font-size: 14px;
+    width: 50%;
+    margin-left: 10%;
+  }
+  
+  button {
+    /* background-color: #007bff; */
+    color: #4e26e1;
+    padding: 10px;
+    cursor: pointer;
+    border: none;
+    width: 100%;
+  }
+  
+  button:hover {
+    background-color: #02541a;
+  }
+  
+  select {
+    margin-bottom: 16px;
+    padding: 8px;
+    font-size: 14px;
+    width: 100%;
+  }
+  
