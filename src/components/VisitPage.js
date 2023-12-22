@@ -29,15 +29,15 @@ const VisitPage = () => {
       {/* Header with navigation links */}
       <nav>
         <ul>
-          <li>
+          
             <button onClick={() => setCurrentPage('viewVisit')}>View Visit</button>
-          </li>
-          <li>
+         
+          
             <button onClick={() => setCurrentPage('addVisit')}>Add Visit</button>
-          </li>
-          <li>
+          
+          
             <button onClick={() => setCurrentPage('feedbackPage')}>Feedback Page</button>
-          </li>
+          
         </ul>
       </nav>
 

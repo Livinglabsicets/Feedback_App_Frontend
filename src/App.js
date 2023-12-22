@@ -3,13 +3,13 @@ import './App.css';
 // src/App.js
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
-import LoginPage from './components/LoginPage';
-import AdminPage from './components/AdminPage';
-import VisitPage from './components/VisitPage';
-import FeedbackPage from './components/FeedbackPage';
-import ViewVisit from './components/ViewVisit';
-import AddVisit from './components/AddVisit';
-import ClientPage from './components/ClientPage'
+import LoginPage from './components/LoginPage.js';
+import AdminPage from './components/AdminPage.js';
+import VisitPage from './components/VisitPage.js';
+import FeedbackPage from './components/FeedbackPage.js';
+import ViewVisit from './components/ViewVisit.js';
+import AddVisit from './components/AddVisit.js';
+import ClientPage from './components/ClientPage.js'
 
 const App = () => {
   const [isLoggedIn, setLoggedIn] = useState(false);

@@ -1,0 +1,62 @@
+.admin-container {
+    max-width: 600px;
+    margin: 50px auto;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    background-color: #ffffff; /* Page background color */
+  }
+  
+  h2 {
+    text-align: center;
+    margin-bottom: 30px;
+  }
+  
+  .button-group {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .custom-link {
+    margin: 15px 0;
+    text-decoration: none;
+  }
+  
+  .custom-button {
+    width: 200px; /* Set a fixed width for both buttons */
+    padding: 15px 30px;
+    font-size: 18px;
+    background-color: #007bff; /* Button color */
+    color: #ffffff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .custom-button:hover {
+    background-color: #0056b3; /* Darker button color on hover */
+  }
+  
+  /* Responsive Styles */
+  @media (max-width: 768px) {
+    .admin-container {
+      padding: 20px;
+    }
+  
+    .custom-button {
+      padding: 12px 24px;
+      font-size: 16px;
+      width: 180px; /* Adjust width for responsiveness if needed */
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .custom-button {
+      padding: 10px 20px;
+      font-size: 14px;
+      width: 160px; /* Adjust width for smaller screens */
+    }
+  }
+  
