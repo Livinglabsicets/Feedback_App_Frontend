@@ -1,54 +1,58 @@
 .container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    
-     /* Set to full viewport height */
-    background-color: #f4f4f4; /* A light background color */
-  }
-  
-  .form-container {
-    background-color: #ffffff; /* White background for the form */
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Optional: Adding a subtle shadow */
-    width: 80%; /* 80% width of the container */
-    max-width: 600px; /* Maximum width for larger screens */
-  }
-  
-  .form-container h2 {
-    text-align: center;
-    margin-bottom: 10px;
-    color: #333333; /* Dark text color */
-  }
-  
-  .form-container label {
-    display: block;
-    margin-bottom: 5px;
-    color: #555555; /* Slightly darker text color for labels */
-  }
-  
-  .form-container input[type="number"],
-  .form-container input[type="text"] {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 5px;
-    border: 1px solid #dddddd; /* Light border */
-    border-radius: 4px;
-  }
-  
-  button[type="submit"] {
-    width: 100%;
-    padding: 10px;
-    background-color: #4CAF50; /* Green color for the submit button */
-    border: none;
-    border-radius: 4px;
-    color: white;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-  
-  button[type="submit"]:hover {
-    background-color: #45a049; /* Slightly darker green on hover */
-  }
-  
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f4f4f4; /* A light background color */
+   /* Full viewport height */
+}
+
+.form-container {
+  background-color: #ffffff; /* White background for the form */
+  padding: 10px;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Optional: Adding a subtle shadow */
+  width: 80%; /* 80% width of the container */
+  max-width: 600px; /* Maximum width for larger screens */
+  margin-top: 1px; /* Added margin to separate from container top */
+}
+
+.form-container h2 {
+  text-align: center;
+  margin-bottom: 1px; /* Increased margin for better spacing */
+  color: #333333; /* Dark text color */
+}
+
+.form-container label {
+  display: block;
+  margin-bottom: 1px;
+  color: #555555; /* Slightly darker text color for labels */
+}
+
+.form-container input[type="number"],
+.form-container input[type="text"] {
+  width: 100%;
+  padding: 5px; /* Slightly increased padding for better touch response */
+  margin-bottom: 1px;
+  border: 1px solid #dddddd; /* Light border */
+  border-radius: 1px;
+}
+
+button[type="submit"] {
+  width: 100%;
+  padding: 5px; /* Slightly increased padding for better touch response */
+  background-color: #4CAF50; /* Green color for the submit button */
+  border: none;
+  border-radius: 4px;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-top: 10px;
+}
+
+button[type="submit"]:hover {
+  background-color: #45a049; /* Slightly darker green on hover */
+}
+
+/* Custom styles for star ratings */
+
+

@@ -63,6 +63,23 @@ const ClientPage = () => {
     }
   };
 
+  // Helper function to display star ratings
+  const renderStarRating = (ratingValue, setRatingFunction) => {
+    const stars = Array.from({ length: 10 }, (_, index) => {
+      const rating = index + 1;
+      return (
+        <span 
+          key={rating}
+          style={{ cursor: 'pointer', color: rating <= ratingValue ? 'gold' : 'gray', fontSize: '30px'  }}
+          onClick={() => setRatingFunction(rating)}
+        >
+          ★
+        </span>
+      );
+    });
+    return stars;
+  };
+
   return (
     <div className="container">
       <div className="form-container">
@@ -71,13 +88,7 @@ const ClientPage = () => {
         <form onSubmit={handleSubmit}>
           <label>
             Overall Rating:
-            <input 
-              type="number" 
-              min="1" 
-              max="5" 
-              value={overallRating} 
-              onChange={(e) => setOverallRating(e.target.value)} 
-            />
+            {renderStarRating(overallRating, setOverallRating)}
           </label>
           
           {matchedData[0]?.demo_details?.map((demo, demoIndex) => (
@@ -85,50 +96,39 @@ const ClientPage = () => {
               <h3>{demo.demo_name}</h3>
 
               <label>
-                {demo.demo_name} Demo Rating:
-                <input 
-                  type="number" 
-                  min="1" 
-                  max="5" 
-                  value={demoFeedback[demoIndex]?.demo_rating || 0} 
-                  onChange={(e) => {
-                    const updatedFeedback = [...demoFeedback];
-                    updatedFeedback[demoIndex] = { 
-                      ...updatedFeedback[demoIndex],
-                      demo_name: demo.demo_name, 
-                      demo_rating: e.target.value 
-                    };
-                    setDemoFeedback(updatedFeedback);
-                  }} 
-                />
+                 {demo.demo_name} Demo Rating: 
+                {renderStarRating(demoFeedback[demoIndex]?.demo_rating || 0, (rating) => {
+                  const updatedFeedback = [...demoFeedback];
+                  updatedFeedback[demoIndex] = {
+                    ...updatedFeedback[demoIndex],
+                    demo_name: demo.demo_name,
+                    demo_rating: rating
+                  };
+                  setDemoFeedback(updatedFeedback);
+                })}
               </label>
               
               {demo.demo_questions?.map((question, questionIndex) => (
                 <div key={question.questionText}>
                   <h4>{question.questionText}</h4>
                   <label>
-                    Question Rating:
-                    <input 
-                      type="number" 
-                      min="1" 
-                      max="5" 
-                      value={demoFeedback[demoIndex]?.question_feedback?.[questionIndex]?.question_rating || 0} 
-                      onChange={(e) => {
-                        const updatedFeedback = [...demoFeedback];
-                        if (!updatedFeedback[demoIndex]?.question_feedback) {
-                          updatedFeedback[demoIndex].question_feedback = [];
-                        }
-                        updatedFeedback[demoIndex].question_feedback[questionIndex] = { 
-                          ...updatedFeedback[demoIndex]?.question_feedback?.[questionIndex],
-                          question: question.questionText, 
-                          question_rating: e.target.value 
-                        };
-                        setDemoFeedback(updatedFeedback);
-                      }} 
-                    />
+                    
+                    {renderStarRating(demoFeedback[demoIndex]?.question_feedback?.[questionIndex]?.question_rating || 0, (rating) => {
+                      const updatedFeedback = [...demoFeedback];
+                      if (!updatedFeedback[demoIndex]?.question_feedback) {
+                        updatedFeedback[demoIndex].question_feedback = [];
+                      }
+                      updatedFeedback[demoIndex].question_feedback[questionIndex] = {
+                        ...updatedFeedback[demoIndex]?.question_feedback?.[questionIndex],
+                        question: question.questionText,
+                        question_rating: rating
+                      };
+                      setDemoFeedback(updatedFeedback);
+                    }, `question-${questionIndex}`)}
                   </label>
                 </div>
               ))}
+              
             </div>
           ))}
           
