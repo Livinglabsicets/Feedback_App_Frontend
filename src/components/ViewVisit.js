@@ -3,17 +3,18 @@ import './ViewVisit.css'; // Import your CSS file for styles
 
 const ViewVisit = () => {
   const [visitData, setVisitData] = useState([]);
+  const [visitSize, setVisitSize] = useState();
 
   // Assume you have a function to fetch the data from the API
   const fetchData = async () => {
     try {
-      // Make API call and set the data to the state
       const response = await fetch('https://feedback-app-v1-0.onrender.com/api/visit/visitList');
       const data = await response.json();
-      
+      console.log("total visit:",data.length);
+      const vlenth=data.length;
+      setVisitSize(vlenth);
       // Sort the visitData based on visit_date in descending order
       const sortedData = data.sort((a, b) => new Date(a.visit_date) - new Date(b.visit_date));
-
       setVisitData(sortedData);
     } catch (error) {
       console.error('Error fetching data:', error);
@@ -21,27 +22,25 @@ const ViewVisit = () => {
   };
 
   useEffect(() => {
-    // Fetch data when the component mounts
     fetchData();
   }, []);
 
-  // Function to format date as DD/MM/YYYY
-const formatDate = (dateString) => {
-  const date = new Date(dateString);
-  const day = date.getDate().toString().padStart(2, '0');
-  const month = (date.getMonth() + 1).toString().padStart(2, '0');
-  const year = date.getFullYear();
-  return `${day}/${month}/${year}`;
-};
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const day = date.getDate().toString().padStart(2, '0');
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const year = date.getFullYear();
+    return `${day}/${month}/${year}`;
+  };
 
-const getTime=(visit_date)=>{
-  // Extract time from visit_date
-  const time = new Date(visit_date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-      return time;
-}
+  const getTime = (visit_date) => {
+    const time = new Date(visit_date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    return time;
+  }
 
   return (
     <div className="visit-container">
+      <h3>Total visit in bucket: {visitSize}</h3>
       {visitData.map((visit, index) => (
         <div key={visit._id} className="visit-table">
           <h1>Visit {index + 1}</h1>

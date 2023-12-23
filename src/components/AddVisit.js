@@ -4,31 +4,29 @@ import './AddVisit.css'; // Import your CSS file for styles
 const AddVisit = () => {
   const [visitDate, setVisitDate] = useState('');
   const [clientName, setClientName] = useState('');
-  const [visitorDetails, setVisitorDetails] = useState([
-    { visitor_name: '', visitor_designation: '' },
-  ]);
+  const [visitorDetails, setVisitorDetails] = useState([{ visitor_name: '', visitor_designation: '' }]);
   const [selectedDemos, setSelectedDemos] = useState([]);
   const [demoDetails, setDemoDetails] = useState([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submissionError, setSubmissionError] = useState(null);
+  const [shouldRefresh, setShouldRefresh] = useState(false);
 
-  // Fetch demo names and details from the server
-  const fetchDemoData = async () => {
-    try {
-      const response = await fetch('https://feedback-app-v1-0.onrender.com/api/demo/demoList');
-      const data = await response.json();
-      // Store the demo details in state
-      setDemoDetails(data.map(demo => ({ ...demo, selected: false })));
-    } catch (error) {
-      console.error('Error fetching demo data:', error);
-    }
-  };
 
   useEffect(() => {
-    // Fetch demo details when the component mounts
+    const fetchDemoData = async () => {
+      try {
+        const response = await fetch('https://feedback-app-v1-0.onrender.com/api/demo/demoList');
+        const data = await response.json();
+        setDemoDetails(data.map(demo => ({ ...demo, selected: false })));
+      } catch (error) {
+        console.error('Error fetching demo data:', error);
+      }
+    };
+
     fetchDemoData();
   }, []);
 
   const handleAddVisitor = () => {
-    // Include selected demos in the new visitor's state
     const newVisitor = { visitor_name: '', visitor_designation: '', selectedDemos: [...selectedDemos] };
     setVisitorDetails([...visitorDetails, newVisitor]);
   };
@@ -56,7 +54,7 @@ const AddVisit = () => {
         ? prevSelected.filter((selected) => selected !== demoName)
         : [...prevSelected, demoName]
     );
-  
+
     try {
       const demoDetailsData = await fetchDemoDetails(demoName);
       setDemoDetails((prevDetails) =>
@@ -66,76 +64,32 @@ const AddVisit = () => {
             : demo
         )
       );
-      console.log("demo details data", demoDetails);
     } catch (error) {
       console.error(`Error fetching demo details for ${demoName}:`, error);
     }
   };
-  
-  
-  
-  // Add this useEffect to log the updated demoDetails
-  useEffect(() => {
-    console.log('Updated demoDetails:', demoDetails);
-  }, [demoDetails]);
-  
-  
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    // console.log("demoDetailsData data before calling post req",demoDetailsData);
-    console.log("demoDetails data before calling post req:",demoDetails.filter((demo)=>demo.selected));
-    // Extract selected demos
-  const selectedDemos = demoDetails.filter((demo) => demo.selected);
-  const customDemo=[];
-  // Log names and descriptions of selected demos
-  console.log("Selected Demos:");
-  selectedDemos.forEach((demo) => {
-    console.log(`Name: ${demo.demoname}, Description: ${demo.description}`);
-    const questionArray1=demo.questions;
-    const questionArray=[];
-    //traverse questionArray1 to extract question except id
-    for(let i=0;i<questionArray1.length;i++)
-    {
-      let currentItem=questionArray1[i];
-      let questionJson={
-        "questionText": currentItem.questionText
-      }
-      questionArray.push(questionJson);
+    setIsSubmitting(true);
 
-    }
-   
-    const jsonData={
-      "demo_name": `${demo.demoname}`,
-      "demo_description": `${demo.description}`,
-      "demo_questions": questionArray
-  }
-  console.log("demo json data:",jsonData);
-  customDemo.push(jsonData);
+    const selectedDemosData = demoDetails.filter((demo) => demo.selected).map((demo) => {
+      const questionArray = demo.questions.map(question => ({ questionText: question.questionText }));
+      return {
+        demo_name: demo.demoname,
+        demo_description: demo.description,
+        demo_questions: questionArray
+      };
+    });
 
-  });
-    
-    // customVisitorDetails=[]
-    // Prepare data for the POST request
     const postData = {
-      "visit_date": new Date(visitDate),
-      "client_name": clientName,
-      "visitors_details": visitorDetails,
-      // demo_details: demoDetails
-      //   .filter((demo) => demo.selected)
-      //   .map(({ demoname, description, questions }) => ({
-      //     demo_name: demoname,
-      //     description: "this is description",
-      //     questions: [{questionText: "question1"},{questionText: "question2"}],
-      //   })),
-      "demo_details": customDemo
+      visit_date: new Date(visitDate),
+      client_name: clientName,
+      visitors_details: visitorDetails,
+      demo_details: selectedDemosData
     };
-    
-    try {
-      console.log("Request data:",postData);
-     
 
-      // Make the POST request
+    try {
       const response = await fetch('https://feedback-app-v1-0.onrender.com/api/visit/createVisit', {
         method: 'POST',
         headers: {
@@ -144,33 +98,50 @@ const AddVisit = () => {
         body: JSON.stringify(postData),
       });
 
-      // Handle the response as needed
-      const result = await response.json();
-      console.log('Post request result:', result);
+      if (response.ok) {
+        // Clear form on successful submission
+        setVisitDate('');
+        setClientName('');
+        setVisitorDetails([{ visitor_name: '', visitor_designation: '' }]);
+        setSelectedDemos([]);
+        //setDemoDetails([]);
+        alert("Visit Added successfully!");
+        // Set the state to true to trigger a component refresh
+        setShouldRefresh(true);
+        
+      } else {
+        const data = await response.json();
+        throw new Error(data.message || 'An error occurred while submitting.');
+      }
     } catch (error) {
       console.error('Error submitting data:', error);
+      alert('Visit not added. Please check you have filled required details or not?');
+      setSubmissionError(error.message);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
   return (
-    <div className="add-visit-container">
+    <div className="add-visit-container" key={shouldRefresh.toString()}>
       <h1>Add Visit</h1>
+      {isSubmitting && <p>Submitting...</p>}
+      {submissionError && <p style={{ color: 'red' }}>{submissionError}</p>}
       <form onSubmit={handleSubmit}>
         <label>
           Visit Date:
-          <input type="datetime-local" value={visitDate} onChange={(e) => setVisitDate(e.target.value)} />
+          <input type="datetime-local" value={visitDate} onChange={(e) => setVisitDate(e.target.value)} required='true'/>
         </label>
 
         <label>
           Client Name:
-          <input type="text" value={clientName} onChange={(e) => setClientName(e.target.value)} />
+          <input type="text" value={clientName} onChange={(e) => setClientName(e.target.value)} required='true'/>
         </label>
 
         <h2>Visitor Details</h2>
         {visitorDetails.map((visitor, index) => (
           <div key={index}>
             <label>
-              
               <input
                 type="text"
                 value={visitor.visitor_name}
@@ -180,7 +151,6 @@ const AddVisit = () => {
             </label>
             <br></br>
             <label>
-             
               <input
                 type="text"
                 value={visitor.visitor_designation}
@@ -207,7 +177,9 @@ const AddVisit = () => {
             </label>
           </div>
         ))}
-        <button type="submit">Submit</button>
+        <button type="submit" disabled={isSubmitting}>
+          Submit
+        </button>
       </form>
     </div>
   );
