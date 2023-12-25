@@ -5,6 +5,7 @@ import './FeedbackPage.css';
 const FeedbackPage = () => {
   //state to store fetched data
   const [feedbackData, setFeedbackData] = useState([]);
+  
 
   //fetch data from the api
   useEffect(() => {
@@ -38,11 +39,14 @@ const FeedbackPage = () => {
       <h2>Feedback Page</h2>
 
       <div className="button-container">
-        {/* Render buttons for client names */}
-        {filteredData.map((item, index) => {
+        
+      {filteredData.length === 0 ? (
+        <p>No visits today</p>
+      ) : (
+        filteredData.map((item, index) => {
           // Extract time from visit_date
           const time = new Date(item.visit_date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-      
+          
           return (
             <Link key={index} to={`/feedback/client/${item.client_name}/${item.visit_date}`} className="button-link">
               <button className="custom-button">
@@ -50,7 +54,10 @@ const FeedbackPage = () => {
               </button>
             </Link>
           );
-        })}
+        })
+      )}
+        
+      
       </div>
     </div>
   );
