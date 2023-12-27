@@ -6,7 +6,9 @@ const FeedbackPage = () => {
   //state to store fetched data
   const [feedbackData, setFeedbackData] = useState([]);
   
-
+  
+  var currentVisitStatus="We are checking today visits.";
+  
   //fetch data from the api
   useEffect(() => {
     const fetchData = async () => {
@@ -33,6 +35,11 @@ const FeedbackPage = () => {
 
   //filter data based on current date
   const filteredData = feedbackData.filter(item => formatDate(item.visit_date) === currentDate);
+  if(filteredData.length === 0)
+  {
+    currentVisitStatus="No Visit Today."
+   
+  }
 
   return (
     <div className="feedback-container">
@@ -41,7 +48,7 @@ const FeedbackPage = () => {
       <div className="button-container">
         
       {filteredData.length === 0 ? (
-        <p>No visits today</p>
+        <p>{currentVisitStatus}</p>
       ) : (
         filteredData.map((item, index) => {
           // Extract time from visit_date

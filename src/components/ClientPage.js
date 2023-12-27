@@ -11,6 +11,7 @@ const ClientPage = () => {
   const [visitComment, setVisitComment] = useState("");  
   const [demoFeedback, setDemoFeedback] = useState([]);
   const [overallRating, setOverallRating] = useState(0);
+  
 
   useEffect(() => {
     const fetchData = async () => {
@@ -32,22 +33,81 @@ const ClientPage = () => {
   }, [data, date, name]);
 
   useEffect(() => {
-    console.log("matchedData :", matchedData);
+    //console.log("matchedData :", matchedData);
+    console.log("Data Matched.");
   }, [matchedData]);
+
+//req data 
+  const feedbackData = {
+    "visit_date": matchedData[0]?.visit_date,
+    "client_name": matchedData[0]?.client_name,
+    "overall_rating": overallRating,
+    "demo_feedback": demoFeedback,
+    "visit_comment": visitComment
+  };
+
+  
+  //json for mail
+  // const eBody = "";
+  // for (const jsonObject of feedbackData.demo_feedback) {
+  //   eBody += `${jsonObject.demo_name} = ${jsonObject.demo_rating} \n`;
+  // }
+const response = {
+  "visit_date": feedbackData.visit_date,
+  "client_name": feedbackData.client_name,
+  "overall_rating": feedbackData.overall_rating,
+  "visit_comment": feedbackData.visit_comment,
+  "demo_feedback": feedbackData.demo_feedback
+};
+var eBody = "";
+  for (const jsonObject of response.demo_feedback) {
+    eBody += `${jsonObject.demo_name}: ${jsonObject.demo_rating} \n`;
+  }
+  // send mail function define here
+
+  async function sendEmail() {
+    var data = {
+        service_id: 'service_7q3tl9p',
+        template_id: 'template_xe43dpq',
+        user_id: 'CegoZl-kwZuIrb_43',
+        template_params: {
+            'visit_date': response.visit_date,
+            'client_name': response.client_name,
+            'overall_rating': response.overall_rating,
+            'visit_comment': response.visit_comment,
+            'demo_feedback': eBody, 
+            'g-recaptcha-response': '03AHJ_ASjnLA214KSNKFJAK12sfKASfehbmfd...'
+        }
+    };
+  
+    try {
+        const response = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        });
+  
+        if (response.ok) {
+            console.log('Your mail is sent!');
+        } else {
+            const errorData = await response.json();
+            console.log('Oops... ' + JSON.stringify(errorData));
+        }
+    } catch (error) {
+        console.log('Oops... ' + error.message);
+    }
+  }
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const feedbackData = {
-      "visit_date": matchedData[0]?.visit_date,
-      "client_name": matchedData[0]?.client_name,
-      "overall_rating": overallRating,
-      "demo_feedback": demoFeedback,
-      "visit_comment": visitComment
-    };
+   
 
     try {
-      console.log("request data:", feedbackData);
+      //console.log("request data:", feedbackData);
       const response = await fetch('https://feedback-app-v1-0.onrender.com/api/feedback/createFeedback', {
         method: 'POST',
         headers: {
@@ -57,8 +117,12 @@ const ClientPage = () => {
       });
 
       const responseData = await response.json();
-      console.log('Feedback saved:', responseData);
+      //setResponseData(responseData);
+    //  console.log('Feedback saved:', responseData);
       alert("ThankYou for your lovely Feedback");
+      //console.log("resData:",resData);
+      //send mail function
+      sendEmail();
     } catch (error) {
       console.error('Error saving feedback:', error);
     }
@@ -66,12 +130,12 @@ const ClientPage = () => {
 
   // Helper function to display star ratings
   const renderStarRating = (ratingValue, setRatingFunction) => {
-    const stars = Array.from({ length: 10 }, (_, index) => {
+    const stars = Array.from({ length: 5 }, (_, index) => {
       const rating = index + 1;
       return (
         <span 
           key={rating}
-          style={{ cursor: 'pointer', color: rating <= ratingValue ? 'gold' : 'gray', fontSize: '30px'  }}
+          style={{ cursor: 'pointer', color: rating <= ratingValue ? 'gold' : 'gray', fontSize: '30px', marginLeft: '20px'  }}
           onClick={() => setRatingFunction(rating)}
         >
           ★
@@ -87,7 +151,7 @@ const ClientPage = () => {
         <h2>Hello {name}, Please give your valuable feedback!</h2>
 
         <form onSubmit={handleSubmit}>
-          <label>
+          <label >
             Overall Rating:
             {renderStarRating(overallRating, setOverallRating)}
           </label>
@@ -137,8 +201,10 @@ const ClientPage = () => {
             Visit Comment:
             <input 
               type="text" 
+              name='comment'
               value={visitComment} 
               onChange={(e) => setVisitComment(e.target.value)} 
+              
             />
           </label>
 

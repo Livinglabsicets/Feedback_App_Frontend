@@ -10,11 +10,16 @@ const ViewVisit = () => {
     try {
       const response = await fetch('https://feedback-app-v1-0.onrender.com/api/visit/visitList');
       const data = await response.json();
-      console.log("total visit:",data.length);
-      const vlenth=data.length;
+       // Filter the visitData to show only visits whose visit_date is today or in the future
+       const currentDate = new Date();
+       const filteredData = data.filter(visit => new Date(visit.visit_date) >= currentDate);
+      //console.log("Total visit with filter",filteredData.length);
+
+      //Sort the visitData based on visit_date in ascending order since you want current and future dates
+      const vlenth=filteredData.length;
       setVisitSize(vlenth);
       // Sort the visitData based on visit_date in descending order
-      const sortedData = data.sort((a, b) => new Date(a.visit_date) - new Date(b.visit_date));
+      const sortedData = filteredData.sort((a, b) => new Date(a.visit_date) - new Date(b.visit_date));
       setVisitData(sortedData);
     } catch (error) {
       console.error('Error fetching data:', error);
