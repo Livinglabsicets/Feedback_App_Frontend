@@ -22,29 +22,29 @@ const App = () => {
     <Router>
       <Routes>
         <Route
-          path="/login"
+          path="/"
           element={isLoggedIn ? <Navigate to="/admin" /> : <LoginPage onLogin={handleLogin} />}
         />
         <Route
           path="/admin"
-          element={isLoggedIn ? <AdminPage /> : <Navigate to="/login" />}
+          element={isLoggedIn ? <AdminPage /> : <Navigate to="/" />}
         />
-        <Route path="/visit" element={isLoggedIn ? <VisitPage /> : <Navigate to="/login" />} />
+        <Route path="/visit" element={isLoggedIn ? <VisitPage /> : <Navigate to="/" />} />
         <Route
           path="/feedback"
-          element={isLoggedIn ? <FeedbackPage /> : <Navigate to="/login" />}
+          element={isLoggedIn ? <FeedbackPage /> : <Navigate to="/" />}
         />
         <Route
           path="/view-visit"
-          element={isLoggedIn ? <ViewVisit /> : <Navigate to="/login" />}
+          element={isLoggedIn ? <ViewVisit /> : <Navigate to="/" />}
         />
         <Route
           path="/add-visit"
-          element={isLoggedIn ? <AddVisit /> : <Navigate to="/login" />}
+          element={isLoggedIn ? <AddVisit /> : <Navigate to="/" />}
         />
         <Route
           path="/feedback/client/:name/:date"
-          element={isLoggedIn ? <ClientPage /> : <Navigate to="/login" />}
+          element={isLoggedIn ? <ClientPage /> : <Navigate to="/" />}
         />
       </Routes>
     </Router>
